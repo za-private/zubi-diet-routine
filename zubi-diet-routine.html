@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="ur" dir="ltr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<meta name="theme-color" content="#1a6b3a">
+<meta name="description" content="Zubi Diet Routine - Sehatmand khana Pakistani andaz mein">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Zubi Diet">
+<title>Zubi Diet Routine</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #f4f6f4; min-height: 100vh; padding-bottom: 80px; }
+
+  .header { background: #1a6b3a; color: white; padding: 1rem 1.25rem 1.25rem; position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 8px rgba(0,0,0,0.15); }
+  .header-row { display: flex; align-items: center; gap: 10px; }
+  .app-logo { width: 38px; height: 38px; background: rgba(255,255,255,0.2); border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 22px; flex-shrink: 0; }
+  .header h1 { font-size: 20px; font-weight: 700; letter-spacing: -0.3px; }
+  .header p { font-size: 12px; opacity: 0.8; margin-top: 1px; }
+
+  .bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; background: white; border-top: 1px solid #e0e0e0; display: flex; z-index: 100; box-shadow: 0 -2px 8px rgba(0,0,0,0.08); }
+  .nav-btn { flex: 1; padding: 10px 4px 8px; text-align: center; cursor: pointer; color: #999; border: none; background: none; font-size: 10px; font-family: inherit; transition: color 0.2s; }
+  .nav-btn .nav-icon { font-size: 22px; display: block; margin-bottom: 2px; }
+  .nav-btn.active { color: #1a6b3a; font-weight: 700; }
+
+  .page { display: none; padding: 1rem; }
+  .page.active { display: block; }
+
+  .card { background: white; border-radius: 14px; padding: 1rem 1.25rem; margin-bottom: 12px; box-shadow: 0 1px 5px rgba(0,0,0,0.08); }
+  .card-title { font-size: 15px; font-weight: 700; color: #1a1a1a; margin-bottom: 10px; display: flex; align-items: center; gap: 7px; }
+
+  .stat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 12px; }
+  .stat-card { background: white; border-radius: 14px; padding: 14px; text-align: center; box-shadow: 0 1px 5px rgba(0,0,0,0.08); }
+  .stat-val { font-size: 28px; font-weight: 800; color: #1a6b3a; }
+  .stat-lbl { font-size: 11px; color: #888; margin-top: 2px; }
+
+  .progress-label { display: flex; justify-content: space-between; font-size: 12px; color: #666; margin-bottom: 4px; }
+  .progress-bar { background: #e8f5ee; border-radius: 99px; height: 9px; overflow: hidden; margin-bottom: 10px; }
+  .progress-fill { height: 100%; border-radius: 99px; transition: width 0.5s ease; }
+
+  .tip-box { background: #e8f5ee; border-left: 4px solid #1a6b3a; border-radius: 0 10px 10px 0; padding: 10px 12px; font-size: 13px; color: #0f5028; margin-bottom: 12px; line-height: 1.6; }
+
+  .meal-row { display: flex; justify-content: space-between; align-items: center; padding: 8px 0; border-bottom: 1px solid #f5f5f5; font-size: 13px; }
+  .meal-row:last-child { border-bottom: none; padding-bottom: 0; }
+  .meal-name { color: #333; }
+  .meal-cal { color: #1a6b3a; font-weight: 700; font-size: 12px; background: #e8f5ee; padding: 3px 9px; border-radius: 99px; }
+
+  .food-item { display: flex; align-items: center; gap: 10px; padding: 9px 0; border-bottom: 1px solid #f5f5f5; }
+  .food-item:last-child { border-bottom: none; }
+  .food-icon { width: 40px; height: 40px; border-radius: 10px; background: #e8f5ee; display: flex; align-items: center; justify-content: center; font-size: 21px; flex-shrink: 0; }
+  .food-info { flex: 1; }
+  .food-name { font-size: 13px; font-weight: 700; color: #222; }
+  .food-desc { font-size: 11px; color: #999; margin-top: 1px; }
+  .food-cal { font-size: 12px; font-weight: 700; color: #1a6b3a; white-space: nowrap; }
+
+  .badge { display: inline-block; padding: 3px 10px; border-radius: 99px; font-size: 10px; font-weight: 700; margin-left: auto; flex-shrink: 0; }
+  .badge-green { background: #d1f0de; color: #0f5028; }
+  .badge-orange { background: #fff0d6; color: #7a4800; }
+  .badge-red { background: #fde8e8; color: #8b1a1a; }
+
+  .water-dots { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 8px; }
+  .water-dot { width: 38px; height: 38px; border-radius: 50%; border: 2px solid #1a6b3a; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 17px; transition: all 0.2s; user-select: none; }
+  .water-dot.filled { background: #1a6b3a; }
+  .water-dot.empty { background: white; }
+
+  .week-row { display: flex; gap: 5px; margin-bottom: 12px; }
+  .day-btn { flex: 1; padding: 7px 2px; text-align: center; font-size: 10px; font-weight: 700; border: 1.5px solid #ddd; border-radius: 8px; cursor: pointer; background: white; color: #aaa; user-select: none; transition: all 0.2s; }
+  .day-btn.done { background: #d1f0de; color: #0f5028; border-color: #a3dbbf; }
+  .day-btn.today { background: #1a6b3a; color: white; border-color: #1a6b3a; }
+
+  .slider-row { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; }
+  .slider-label { font-size: 12px; color: #666; min-width: 80px; }
+  .slider-val { font-size: 13px; font-weight: 700; min-width: 40px; text-align: right; color: #1a6b3a; }
+  input[type=range] { flex: 1; accent-color: #1a6b3a; }
+
+  .bmi-result { text-align: center; padding: 16px 0; }
+  .bmi-number { font-size: 52px; font-weight: 800; color: #1a6b3a; }
+  .bmi-label { font-size: 15px; color: #555; margin-top: 4px; }
+  .bmi-bar-wrap { background: linear-gradient(to right, #4fc3f7, #81c784, #ffb74d, #e57373); border-radius: 99px; height: 12px; position: relative; margin: 14px 0 4px; }
+  .bmi-marker { position: absolute; top: -5px; width: 22px; height: 22px; background: #222; border-radius: 50%; transform: translateX(-50%); transition: left 0.5s; border: 3px solid white; box-shadow: 0 1px 4px rgba(0,0,0,0.3); }
+
+  .input-group { margin-bottom: 12px; }
+  .input-label { font-size: 12px; color: #666; margin-bottom: 5px; display: block; font-weight: 600; }
+  input[type=number], select { width: 100%; padding: 11px 12px; border: 1.5px solid #e0e0e0; border-radius: 10px; font-size: 14px; font-family: inherit; color: #222; background: white; outline: none; }
+  input[type=number]:focus, select:focus { border-color: #1a6b3a; }
+
+  .btn-green { width: 100%; padding: 13px; font-size: 15px; font-weight: 700; border-radius: 12px; cursor: pointer; border: none; background: #1a6b3a; color: white; font-family: inherit; letter-spacing: 0.2px; }
+  .btn-green:active { opacity: 0.85; }
+
+  .install-banner { background: #1a6b3a; color: white; padding: 12px 16px; border-radius: 14px; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; font-size: 13px; }
+  .install-banner button { background: white; color: #1a6b3a; border: none; padding: 7px 16px; border-radius: 8px; font-size: 12px; font-weight: 700; cursor: pointer; font-family: inherit; }
+
+  .share-btn { display: flex; align-items: center; gap: 12px; padding: 13px; background: white; border-radius: 12px; margin-bottom: 8px; box-shadow: 0 1px 4px rgba(0,0,0,0.07); cursor: pointer; border: none; width: 100%; font-family: inherit; font-size: 13px; color: #222; text-align: left; }
+  .share-icon { width: 42px; height: 42px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 21px; flex-shrink: 0; }
+
+  .streak-badge { background: #fff0d6; border-radius: 12px; padding: 12px 16px; display: flex; align-items: center; gap: 10px; margin-bottom: 12px; }
+  .streak-num { font-size: 30px; font-weight: 800; color: #e67e00; }
+  .streak-text { font-size: 13px; color: #7a4800; font-weight: 600; }
+
+  .section-label { font-size: 11px; font-weight: 700; color: #999; text-transform: uppercase; letter-spacing: 0.8px; margin: 4px 0 8px; }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-row">
+    <div class="app-logo">🥗</div>
+    <div>
+      <h1>Zubi Diet Routine</h1>
+      <p>Sehatmand khana, Pakistani andaz mein</p>
+    </div>
+  </div>
+</div>
+
+<div style="padding: 12px 12px 0;" id="install-banner-wrap">
+  <div class="install-banner">
+    <div>📲 <strong>Home Screen pe Install Karen</strong><br><span style="font-size:11px;opacity:0.85;">Bilkul free — ek tap mein</span></div>
+    <button onclick="installApp()">Install</button>
+  </div>
+</div>
+
+<!-- HOME PAGE -->
+<div class="page active" id="page-home">
+  <div class="streak-badge" style="margin-top:12px;">
+    <div class="streak-num" id="streak-num">5</div>
+    <div><div class="streak-text">🔥 Din ki Streak</div><div style="font-size:11px;color:#b07000;">Wah! Lage raho!</div></div>
+  </div>
+
+  <div class="stat-grid">
+    <div class="stat-card"><div class="stat-val" id="cal-today">1240</div><div class="stat-lbl">Aaj ki Calories</div></div>
+    <div class="stat-card"><div class="stat-val" id="cal-remain">560</div><div class="stat-lbl">Bachi hain</div></div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">📊 Aaj ki Progress</div>
+    <div class="progress-label"><span>Calories</span><span id="cal-pct-lbl">69%</span></div>
+    <div class="progress-bar"><div class="progress-fill" id="cal-bar" style="width:69%;background:#1a6b3a;"></div></div>
+    <div class="progress-label"><span>Protein</span><span>52%</span></div>
+    <div class="progress-bar"><div class="progress-fill" style="width:52%;background:#2196a8;"></div></div>
+    <div class="progress-label"><span>Pani (Water)</span><span id="water-pct-lbl">50%</span></div>
+    <div class="progress-bar"><div class="progress-fill" id="water-bar" style="width:50%;background:#1565c0;"></div></div>
+  </div>
+
+  <div class="tip-box" id="daily-tip">💡 Loading tip...</div>
+
+  <div class="card">
+    <div class="card-title">💧 Paani Tracker <span style="font-size:12px;font-weight:400;color:#888;">(8 glass)</span></div>
+    <div class="water-dots" id="water-dots"></div>
+    <p style="font-size:12px;color:#888;margin-top:10px;" id="water-msg"></p>
+  </div>
+
+  <div class="card">
+    <div class="card-title">🎯 Calorie Goal</div>
+    <div class="slider-row">
+      <span class="slider-label">Daily Goal</span>
+      <input type="range" min="1200" max="2800" value="1800" step="50" id="goal-slider" oninput="updateGoal(this.value)">
+      <span class="slider-val" id="goal-val">1800</span>
+    </div>
+  </div>
+</div>
+
+<!-- MEALS PAGE -->
+<div class="page" id="page-meals">
+  <div style="margin-top:12px;"></div>
+  <div class="card">
+    <div class="card-title">🌅 Nashta (Breakfast) <span class="badge badge-green" style="margin-left:auto;">Healthy</span></div>
+    <div class="meal-row"><span class="meal-name">Paratha (1) + Dahi</span><span class="meal-cal">320 cal</span></div>
+    <div class="meal-row"><span class="meal-name">Anday (2 uble hue)</span><span class="meal-cal">140 cal</span></div>
+    <div class="meal-row"><span class="meal-name">Chai (kum cheeni)</span><span class="meal-cal">60 cal</span></div>
+    <div style="text-align:right;font-size:11px;color:#aaa;margin-top:8px;">Kul: 520 cal</div>
+  </div>
+  <div class="card">
+    <div class="card-title">☀️ Dopahar ka Khana <span class="badge badge-orange" style="margin-left:auto;">Moderate</span></div>
+    <div class="meal-row"><span class="meal-name">Brown Chawal (1 bowl)</span><span class="meal-cal">220 cal</span></div>
+    <div class="meal-row"><span class="meal-name">Daal Mash (1 katori)</span><span class="meal-cal">180 cal</span></div>
+    <div class="meal-row"><span class="meal-name">Salad (kheera, tamatar)</span><span class="meal-cal">30 cal</span></div>
+    <div class="meal-row"><span class="meal-name">Roti (1 tandoor)</span><span class="meal-cal">120 cal</span></div>
+    <div style="text-align:right;font-size:11px;color:#aaa;margin-top:8px;">Kul: 550 cal</div>
+  </div>
+  <div class="card">
+    <div class="card-title">☕ Sham ka Naashta</div>
+    <div class="meal-row"><span class="meal-name">Mewa (badam, akhrot 10-12)</span><span class="meal-cal">90 cal</span></div>
+    <div class="meal-row"><span class="meal-name">Phal (1 seb ya 1 kela)</span><span class="meal-cal">80 cal</span></div>
+    <div style="text-align:right;font-size:11px;color:#aaa;margin-top:8px;">Kul: 170 cal</div>
+  </div>
+  <div class="card">
+    <div class="card-title">🌙 Raat ka Khana <span class="badge badge-green" style="margin-left:auto;">Light</span></div>
+    <div class="meal-row"><span class="meal-name">Grilled Murghi (150g)</span><span class="meal-cal">230 cal</span></div>
+    <div class="meal-row"><span class="meal-name">Sabzi (karela / palak)</span><span class="meal-cal">70 cal</span></div>
+    <div class="meal-row"><span class="meal-name">Roti (1 pateeli)</span><span class="meal-cal">100 cal</span></div>
+    <div style="text-align:right;font-size:11px;color:#aaa;margin-top:8px;">Kul: 400 cal</div>
+  </div>
+  <div style="text-align:center;padding:12px;font-size:14px;font-weight:700;color:#1a6b3a;background:white;border-radius:14px;box-shadow:0 1px 5px rgba(0,0,0,0.08);">
+    🍽️ Roz ki kul calories: ~1,640
+  </div>
+</div>
+
+<!-- FOODS PAGE -->
+<div class="page" id="page-foods">
+  <div style="margin-top:12px;"></div>
+  <div class="tip-box">✅ Yeh Pakistani gharelu khaane sehat ke liye best hain:</div>
+  <div class="card">
+    <div class="card-title">⭐ Recommended Foods</div>
+    <div class="food-item"><div class="food-icon">🥚</div><div class="food-info"><div class="food-name">Anda (Egg)</div><div class="food-desc">Protein ka aacha zariya — roz khayein</div></div><div class="food-cal">70 cal</div></div>
+    <div class="food-item"><div class="food-icon">🍛</div><div class="food-info"><div class="food-name">Daal (Lentils)</div><div class="food-desc">Fiber aur iron se bharpur</div></div><div class="food-cal">180 cal</div></div>
+    <div class="food-item"><div class="food-icon">🥛</div><div class="food-info"><div class="food-name">Dahi (Yogurt)</div><div class="food-desc">Gut health ke liye behtar</div></div><div class="food-cal">60 cal</div></div>
+    <div class="food-item"><div class="food-icon">🌿</div><div class="food-info"><div class="food-name">Palak / Methi</div><div class="food-desc">Iron aur calcium se bhari</div></div><div class="food-cal">25 cal</div></div>
+    <div class="food-item"><div class="food-icon">🐟</div><div class="food-info"><div class="food-name">Machli (Fish)</div><div class="food-desc">Omega-3 aur protein</div></div><div class="food-cal">150 cal</div></div>
+    <div class="food-item"><div class="food-icon">🫘</div><div class="food-info"><div class="food-name">Chanay (Chickpeas)</div><div class="food-desc">Fibre aur plant protein</div></div><div class="food-cal">160 cal</div></div>
+    <div class="food-item"><div class="food-icon">🧅</div><div class="food-info"><div class="food-name">Pyaz / Lehsan / Adrak</div><div class="food-desc">Immunity boost karte hain</div></div><div class="food-cal">15 cal</div></div>
+  </div>
+  <div class="card">
+    <div class="card-title">❌ Parhej Karen</div>
+    <div class="food-item"><div class="food-icon">🍟</div><div class="food-info"><div class="food-name">Tali hoi cheezein</div><div class="food-desc">Samosa, pakora, puri — kum karen</div></div><span class="badge badge-red">Avoid</span></div>
+    <div class="food-item"><div class="food-icon">🥤</div><div class="food-info"><div class="food-name">Cold Drinks / Juices</div><div class="food-desc">Sugarwali drinks bilkul na piyen</div></div><span class="badge badge-red">Avoid</span></div>
+    <div class="food-item"><div class="food-icon">🍬</div><div class="food-info"><div class="food-name">Meethai / Kheer</div><div class="food-desc">Thora sa occasion par theek hai</div></div><span class="badge badge-orange">Limit</span></div>
+    <div class="food-item"><div class="food-icon">🍞</div><div class="food-info"><div class="food-name">Maida (White Flour)</div><div class="food-desc">Atta ki roti prefer karen</div></div><span class="badge badge-orange">Limit</span></div>
+  </div>
+</div>
+
+<!-- BMI PAGE -->
+<div class="page" id="page-bmi">
+  <div style="margin-top:12px;"></div>
+  <div class="card">
+    <div class="card-title">⚖️ BMI Calculator</div>
+    <div class="input-group">
+      <label class="input-label">Qadd / Height (cm)</label>
+      <input type="number" id="height-input" placeholder="Maslan: 170" min="100" max="250">
+    </div>
+    <div class="input-group">
+      <label class="input-label">Wazan / Weight (kg)</label>
+      <input type="number" id="weight-input" placeholder="Maslan: 70" min="30" max="200">
+    </div>
+    <div class="input-group">
+      <label class="input-label">Umar / Age</label>
+      <input type="number" id="age-input" placeholder="Maslan: 30" min="10" max="100">
+    </div>
+    <div class="input-group">
+      <label class="input-label">Jinsi / Gender</label>
+      <select id="gender-input">
+        <option value="male">Mard (Male)</option>
+        <option value="female">Aurat (Female)</option>
+      </select>
+    </div>
+    <button class="btn-green" onclick="calcBMI()">BMI Calculate Karen</button>
+  </div>
+
+  <div class="card" id="bmi-result-card" style="display:none;">
+    <div class="card-title">📊 Aapka Nateeja</div>
+    <div class="bmi-result">
+      <div class="bmi-number" id="bmi-val">--</div>
+      <div class="bmi-label" id="bmi-label">--</div>
+    </div>
+    <div class="bmi-bar-wrap"><div class="bmi-marker" id="bmi-marker" style="left:30%"></div></div>
+    <div style="display:flex;justify-content:space-between;font-size:10px;color:#aaa;margin-top:2px;">
+      <span>Kum</span><span>Normal</span><span>Zyada</span><span>Motapa</span>
+    </div>
+    <div class="tip-box" style="margin-top:14px;margin-bottom:0;" id="bmi-advice"></div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">📅 Is Hafte ki Routine</div>
+    <div class="week-row" id="week-row"></div>
+    <div class="stat-grid" style="margin-top:8px;margin-bottom:0;">
+      <div class="stat-card" style="box-shadow:none;background:#f4f6f4;"><div class="stat-val" id="days-done">5</div><div class="stat-lbl">Din Follow Kiye</div></div>
+      <div class="stat-card" style="box-shadow:none;background:#f4f6f4;"><div class="stat-val" id="weight-change">-1.2 kg</div><div class="stat-lbl">Weight Change</div></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">🏃 Exercise Tracker</div>
+    <div class="slider-row">
+      <span class="slider-label">Paidal (min)</span>
+      <input type="range" min="0" max="90" value="30" step="5" oninput="document.getElementById('walk-val').textContent=this.value+' min'">
+      <span class="slider-val" id="walk-val">30 min</span>
+    </div>
+    <div class="slider-row">
+      <span class="slider-label">Exercise</span>
+      <input type="range" min="0" max="90" value="20" step="5" oninput="document.getElementById('ex-val').textContent=this.value+' min'">
+      <span class="slider-val" id="ex-val">20 min</span>
+    </div>
+  </div>
+</div>
+
+<!-- SHARE PAGE -->
+<div class="page" id="page-share">
+  <div style="margin-top:12px;"></div>
+  <div class="card">
+    <div class="card-title">📱 Phone mein Install Karen</div>
+    <div style="background:#f4f6f4;border-radius:10px;padding:13px;font-size:13px;color:#333;line-height:1.9;margin-bottom:10px;">
+      <strong>🤖 Android (Chrome):</strong><br>
+      1. Upar ⋮ (3 dots) tap karen<br>
+      2. "Add to Home Screen" ya "Install App" tap karen<br>
+      3. Confirm karen ✅ — ho gaya!
+    </div>
+    <div style="background:#f4f6f4;border-radius:10px;padding:13px;font-size:13px;color:#333;line-height:1.9;">
+      <strong>🍎 iPhone (Safari):</strong><br>
+      1. Neeche share button ⬆️ tap karen<br>
+      2. "Add to Home Screen" chunein<br>
+      3. Add tap karen ✅ — ho gaya!
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-title">🔗 Doston ko Share Karen</div>
+    <button class="share-btn" onclick="shareApp('whatsapp')">
+      <div class="share-icon" style="background:#d4f7dc;">💬</div>
+      <div><strong>WhatsApp pe Share Karen</strong><br><span style="font-size:11px;color:#888;">Family aur doston ko bhejein</span></div>
+    </button>
+    <button class="share-btn" onclick="shareApp('copy')">
+      <div class="share-icon" style="background:#e8eaff;">🔗</div>
+      <div><strong>Link Copy Karen</strong><br><span style="font-size:11px;color:#888;">Kahin bhi paste karen</span></div>
+    </button>
+    <button class="share-btn" onclick="shareNative()">
+      <div class="share-icon" style="background:#fff0d6;">📤</div>
+      <div><strong>Share (Phone Menu)</strong><br><span style="font-size:11px;color:#888;">Phone ka share menu kholen</span></div>
+    </button>
+  </div>
+  <div class="tip-box">🌟 <strong>Zubi Diet Routine</strong> bilkul <strong>free</strong> hai. Poore ghar waalon ko share karen!</div>
+</div>
+
+<!-- Bottom Nav -->
+<div class="bottom-nav">
+  <button class="nav-btn active" onclick="showPage('home',this)"><span class="nav-icon">🏠</span>Home</button>
+  <button class="nav-btn" onclick="showPage('meals',this)"><span class="nav-icon">🍛</span>Meals</button>
+  <button class="nav-btn" onclick="showPage('foods',this)"><span class="nav-icon">🥕</span>Foods</button>
+  <button class="nav-btn" onclick="showPage('bmi',this)"><span class="nav-icon">⚖️</span>BMI</button>
+  <button class="nav-btn" onclick="showPage('share',this)"><span class="nav-icon">📤</span>Share</button>
+</div>
+
+<script>
+function showPage(page, btn) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('page-' + page).classList.add('active');
+  btn.classList.add('active');
+  window.scrollTo(0,0);
+}
+
+let waterCount = 4;
+const tips = [
+  "💡 Subah uthke khali pait 2 glass garam paani piyen — metabolism boost hogi.",
+  "💡 Raat ko sone se 2 ghante pehle khaana band kar dein — weight control ke liye.",
+  "💡 Roti ki jagah atta prefer karen — fiber zyada hoti hai.",
+  "💡 Khaane mein namak kum karen — blood pressure control mein madad milti hai.",
+  "💡 Din mein 5 choti meals lein — metabolism tez rehti hai.",
+  "💡 Neend poori lein (7-8 ghante) — weight loss mein neend ka bara kirdar hai.",
+  "💡 Khana dheeray dheeray chabayen — dehaan se khaane se kam khate hain."
+];
+
+function renderWater() {
+  const wd = document.getElementById('water-dots');
+  wd.innerHTML = '';
+  for (let i = 0; i < 8; i++) {
+    const d = document.createElement('div');
+    d.className = 'water-dot ' + (i < waterCount ? 'filled' : 'empty');
+    d.textContent = i < waterCount ? '💧' : '○';
+    d.onclick = () => { waterCount = (i < waterCount) ? i : i + 1; renderWater(); updateWater(); };
+    wd.appendChild(d);
+  }
+}
+
+function updateWater() {
+  const pct = Math.round(waterCount / 8 * 100);
+  document.getElementById('water-pct-lbl').textContent = pct + '%';
+  document.getElementById('water-bar').style.width = pct + '%';
+  const rem = 8 - waterCount;
+  document.getElementById('water-msg').textContent = waterCount === 0 ? 'Abhi tak paani nahi piya — shuru karen!' : waterCount + ' glass piya' + (rem > 0 ? ' — ' + rem + ' aur piyen!' : ' — Shabash! Poora pani pi liya 🎉');
+  localStorage.setItem('water', waterCount);
+}
+
+function updateGoal(val) {
+  document.getElementById('goal-val').textContent = val;
+  const eaten = 1240;
+  const remain = Math.max(0, val - eaten);
+  document.getElementById('cal-remain').textContent = remain;
+  const pct = Math.min(100, Math.round(eaten / val * 100));
+  document.getElementById('cal-pct-lbl').textContent = pct + '%';
+  document.getElementById('cal-bar').style.width = pct + '%';
+  localStorage.setItem('goal', val);
+}
+
+function calcBMI() {
+  const h = parseFloat(document.getElementById('height-input').value);
+  const w = parseFloat(document.getElementById('weight-input').value);
+  if (!h || !w || h < 100 || w < 30) { alert('Sahi qadd aur wazan darj karen'); return; }
+  const bmi = w / ((h/100)**2);
+  document.getElementById('bmi-val').textContent = bmi.toFixed(1);
+  let label, advice, mp;
+  if (bmi < 18.5) { label='⚠️ Wazan Kum (Underweight)'; advice='Aapka wazan kam hai. Doodh, daal, mewa aur ghee wala khaana zyada lein. Doctor se milein.'; mp=12; }
+  else if (bmi < 25) { label='✅ Normal Wazan (Healthy)'; advice='Mubarak ho! Wazan bilkul theek hai. Is routine ko continue karen aur exercise jaari rakhen.'; mp=38; }
+  else if (bmi < 30) { label='⚠️ Zyada Wazan (Overweight)'; advice='Tali cheezein aur meetha kum karen. Roz 30 min paidal chalein aur paani zyada piyen.'; mp=62; }
+  else { label='🚨 Motapa (Obese)'; advice='Kisi doctor ya nutritionist se milein. Vegetables, daal aur grilled food prefer karen. Exercise zaroori hai.'; mp=85; }
+  document.getElementById('bmi-label').textContent = label;
+  document.getElementById('bmi-advice').innerHTML = '<strong>Mashwara:</strong> ' + advice;
+  document.getElementById('bmi-marker').style.left = mp + '%';
+  document.getElementById('bmi-result-card').style.display = 'block';
+  document.getElementById('bmi-result-card').scrollIntoView({behavior:'smooth',block:'nearest'});
+}
+
+const days = ['Sat','Ahad','Pir','Mangal','Budh','Jumerat','Juma'];
+let doneMap = JSON.parse(localStorage.getItem('doneMap') || '[true,true,true,true,true,false,false]');
+const todayIdx = new Date().getDay() === 0 ? 6 : new Date().getDay() - 1;
+
+function renderWeek() {
+  const wr = document.getElementById('week-row');
+  wr.innerHTML = '';
+  let count = 0;
+  days.forEach((d, i) => {
+    const btn = document.createElement('div');
+    btn.className = 'day-btn' + (i === todayIdx ? ' today' : (doneMap[i] ? ' done' : ''));
+    btn.textContent = d;
+    btn.onclick = () => { if (i !== todayIdx) { doneMap[i]=!doneMap[i]; localStorage.setItem('doneMap',JSON.stringify(doneMap)); renderWeek(); } };
+    wr.appendChild(btn);
+    if (doneMap[i]) count++;
+  });
+  document.getElementById('days-done').textContent = count;
+  document.getElementById('streak-num').textContent = count;
+}
+
+function shareApp(type) {
+  const url = window.location.href;
+  const msg = '🥗 Zubi Diet Routine — Pakistani sehatmand khane ka aacha app! Bilkul free: ' + url;
+  if (type === 'whatsapp') window.open('https://api.whatsapp.com/send?text=' + encodeURIComponent(msg));
+  else navigator.clipboard.writeText(url).then(() => alert('Link copy ho gaya! ✅')).catch(() => alert('Link: ' + url));
+}
+
+function shareNative() {
+  if (navigator.share) navigator.share({title:'Zubi Diet Routine', text:'🥗 Pakistani Diet App — bilkul free!', url: window.location.href});
+  else shareApp('copy');
+}
+
+let deferredPrompt;
+window.addEventListener('beforeinstallprompt', e => { e.preventDefault(); deferredPrompt = e; });
+function installApp() {
+  if (deferredPrompt) { deferredPrompt.prompt(); deferredPrompt.userChoice.then(() => { document.getElementById('install-banner-wrap').style.display='none'; deferredPrompt=null; }); }
+  else { document.getElementById('install-banner-wrap').style.display='none'; showPage('share', document.querySelector('.nav-btn:last-child')); }
+}
+
+function loadData() {
+  waterCount = parseInt(localStorage.getItem('water') || 4);
+  const g = localStorage.getItem('goal') || 1800;
+  document.getElementById('goal-slider').value = g;
+  updateGoal(g);
+}
+
+document.getElementById('daily-tip').innerHTML = tips[new Date().getDay() % tips.length];
+loadData();
+renderWater();
+updateWater();
+renderWeek();
+</script>
+</body>
+</html>
